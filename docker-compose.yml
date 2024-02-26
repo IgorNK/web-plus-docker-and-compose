@@ -19,7 +19,7 @@ services:
   backend:
     build:
       context: .
-      dokerfile: Dockerfile.backend
+      dockerfile: Dockerfile.backend
     ports:
       - "4000:3000"
     env_file: .env
