@@ -15,7 +15,6 @@ services:
       start_period: 40s
     restart: unless-stopped
     networks:
-      - internal-network
       - internet
   backend:
     build:
@@ -40,7 +39,7 @@ services:
     image: "postgres:latest"
     env_file: .env
     volumes:
-      - ./pg-data:/var/lib/postgresql/data/pgdata
+      - pg_data:/var/lib/postgresql/data/pgdata
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 1s
@@ -55,3 +54,5 @@ networks:
     internal: true
   internet:
     driver: bridge
+volumes:
+  pg_data:
