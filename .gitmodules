@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/IgorNK/kupipodariday-backend
+[submodule "frontend"]
+	path = frontend
+	url = git@github.com:IgorNK/kupipodariday-frontend.git
