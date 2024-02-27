@@ -1,0 +1,60 @@
+version: "3.9"
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "8081:80"
+    env_file: .env
+    healthcheck:
+      test: "wget -nv -t1 --spider 'http://localhost:80/'"
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - internet
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "4000:3000"
+    env_file: .env
+    environment:
+      POSTGRES_HOST: database
+    depends_on:
+      - database
+    healthcheck:
+      test: "wget -nv -t1 --spider 'http://localhost:3000/'"
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - internal-network
+      - internet
+  database:
+    image: "postgres:latest"
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - internal-network
+networks:
+  internal-network:
+    driver: bridge
+    internal: true
+  internet:
+    driver: bridge
+volumes:
+  pg_data:

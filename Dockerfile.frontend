@@ -1,0 +1,13 @@
+FROM node:16-alpine as builder
+WORKDIR /app
+COPY ./frontend/package*.json ./
+RUN npm i
+COPY ./frontend/. .
+RUN npm run build
+
+FROM nginx:stable-alpine as production
+WORKDIR /
+COPY ./frontend/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/build ./usr/share/nginx/html
+EXPOSE 80
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
