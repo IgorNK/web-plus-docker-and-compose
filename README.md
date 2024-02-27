@@ -3,7 +3,7 @@
 ## Instructions
 Repository uses git submodules. After you clone the repository, initiate them with:
 ```
-git submodule init
+git submodule update --init
 ```
 Optionally, clone this repository along with submodules:
 ```
